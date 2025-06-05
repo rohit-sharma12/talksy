@@ -3,11 +3,11 @@ import bcrypt from 'bcrypt'
 import { generateToken } from '../lib/utils.js'
 import { v2 as cloudinary } from 'cloudinary';
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
 
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
@@ -61,11 +61,11 @@ export const login = async (req, res) => {
         const user = await User.findOne({ email })
 
         if (!user) {
-            return res.send(400).json({ message: 'Invalid credentials' })
+            return res.status(400).json({ message: 'Invalid credentials' })
         }
         const isPasswordCorrect = await bcrypt.compare(password, user.password)
         if (!isPasswordCorrect) {
-            return res.status(400).json({ message: 'Invalid creadentials' })
+            return res.status(400).json({ message: 'Invalid credentials' })
         }
         generateToken(user._id, res);
 
