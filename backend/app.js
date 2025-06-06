@@ -7,7 +7,10 @@ import messageRoutes from './routes/message.route.js'
 import { app, server } from './lib/socket.js'
 import cors from 'cors'
 
+import path from 'path'
 dotenv.config();
+
+const __dirname = path.resolve();
 
 app.use(express.json({ limit: '10mb' }))
 app.use(cookieParser())
@@ -19,6 +22,11 @@ app.use(cors({
 
 app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
+
+app.use(express.static(path.join(__dirname, "public")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 const PORT = process.env.PORT;
 server.listen(PORT, () => {
